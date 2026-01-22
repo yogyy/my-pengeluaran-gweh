@@ -1,67 +1,62 @@
 <script lang="ts">
-  import { useRegisterSW } from 'virtual:pwa-register/svelte'
+  import { useRegisterSW } from "virtual:pwa-register/svelte";
 
   // periodic sync is disabled, change the value to enable it, the period is in milliseconds
   // You can remove onRegisteredSW callback and registerPeriodicSync function
-  const period = 0
+  const period = 0;
 
   /**
    * This function will register a periodic sync check every hour, you can modify the interval as needed.
    */
   function registerPeriodicSync(swUrl: string, r: ServiceWorkerRegistration) {
-    if (period <= 0) return
+    if (period <= 0) return;
 
     setInterval(async () => {
-      if ('onLine' in navigator && !navigator.onLine)
-        return
+      if ("onLine" in navigator && !navigator.onLine) return;
 
       const resp = await fetch(swUrl, {
-        cache: 'no-store',
+        cache: "no-store",
         headers: {
-          'cache': 'no-store',
-          'cache-control': 'no-cache',
+          cache: "no-store",
+          "cache-control": "no-cache",
         },
-      })
+      });
 
-      if (resp?.status === 200)
-        await r.update()
-    }, period)
+      if (resp?.status === 200) await r.update();
+    }, period);
   }
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
-      if (period <= 0) return
-      if (r?.active?.state === 'activated') {
-        registerPeriodicSync(swUrl, r)
-      }
-      else if (r?.installing) {
-        r.installing.addEventListener('statechange', (e) => {
-          const sw = e.target as ServiceWorker
-          if (sw.state === 'activated')
-            registerPeriodicSync(swUrl, r)
-        })
+      if (period <= 0) return;
+      if (r?.active?.state === "activated") {
+        registerPeriodicSync(swUrl, r);
+      } else if (r?.installing) {
+        r.installing.addEventListener("statechange", (e) => {
+          const sw = e.target as ServiceWorker;
+          if (sw.state === "activated") registerPeriodicSync(swUrl, r);
+        });
       }
     },
-  })
+  });
 
   function close() {
-      
-      needRefresh.set(false)
+    needRefresh.set(false);
   }
 
-  let toast = $derived($needRefresh)
-  let message = $derived($needRefresh ? 'New content available, click on reload button to update.' : '')
+  let toast = $derived($needRefresh);
+  let message = $derived(
+    $needRefresh
+      ? "New content available, click on reload button to update."
+      : ""
+  );
 </script>
 
 {#if toast}
-  <div
-    class="pwa-toast"
-    role="alert"
-    aria-labelledby="toast-message"
-  >
+  <div class="pwa-toast" role="alert" aria-labelledby="toast-message">
     <div class="message">
       <span id="toast-message">
-        { message }
+        {message}
       </span>
     </div>
     <div class="buttons">
@@ -70,9 +65,7 @@
           Reload
         </button>
       {/if}
-      <button type="button" onclick={close}>
-        Close
-      </button>
+      <button type="button" onclick={close}> Close </button>
     </div>
   </div>
 {/if}
