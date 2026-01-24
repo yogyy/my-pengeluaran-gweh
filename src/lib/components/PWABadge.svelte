@@ -1,9 +1,10 @@
 <script lang="ts">
   import { useRegisterSW } from "virtual:pwa-register/svelte";
+  import Button from "./ui/button/button.svelte";
 
   // periodic sync is disabled, change the value to enable it, the period is in milliseconds
   // You can remove onRegisteredSW callback and registerPeriodicSync function
-  const period = 0;
+  const period = 1000 * 60 * 60;
 
   /**
    * This function will register a periodic sync check every hour, you can modify the interval as needed.
@@ -26,7 +27,7 @@
     }, period);
   }
 
-  const { needRefresh, updateServiceWorker } = useRegisterSW({
+  const { needRefresh, updateServiceWorker, offlineReady } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
       if (period <= 0) return;
       if (r?.active?.state === "activated") {
@@ -53,48 +54,30 @@
 </script>
 
 {#if toast}
-  <div class="pwa-toast" role="alert" aria-labelledby="toast-message">
-    <div class="message">
-      <span id="toast-message">
+  <div
+    class="fixed right-0 bottom-0 m-4 p-3 border rounded-[5px] z-20 text-left shadow bg-background text-foreground"
+    role="alert"
+    aria-labelledby="toast-message"
+  >
+    <div class="mb-2">
+      <span id="toast-message" class="text-sm">
         {message}
       </span>
     </div>
-    <div class="buttons">
+    <div class="mr-1.5 rounded-sm px-1 py-2.5">
       {#if $needRefresh}
-        <button type="button" onclick={() => updateServiceWorker(true)}>
+        <Button
+          variant="outline"
+          type="button"
+          onclick={() => updateServiceWorker(true)}
+          size="sm"
+        >
           Reload
-        </button>
+        </Button>
       {/if}
-      <button type="button" onclick={close}> Close </button>
+      <Button size="sm" variant="destructive" type="button" onclick={close}
+        >Close</Button
+      >
     </div>
   </div>
 {/if}
-
-<style>
-  .pwa-toast {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    margin: 16px;
-    padding: 12px;
-    border: 1px solid #8885;
-    border-radius: 4px;
-    z-index: 2;
-    text-align: left;
-    box-shadow: 3px 4px 5px 0 #8885;
-    background-color: white;
-  }
-  .pwa-toast .message {
-    margin-bottom: 8px;
-  }
-  .pwa-toast .buttons {
-    display: flex;
-  }
-  .pwa-toast button {
-    border: 1px solid #8885;
-    outline: none;
-    margin-right: 5px;
-    border-radius: 2px;
-    padding: 3px 10px;
-  }
-</style>
