@@ -55,27 +55,25 @@
     amount = "";
     category = "";
     description = "";
-    date = undefined;
   }
 </script>
 
-<div class="bg-card rounded-lg shadow-md p-6 text-card-foreground">
+<div class="bg-card rounded-lg shadow-md p-6 text-card-foreground w-full">
   <h2 class="text-xl font-bold mb-4">Add Transaction</h2>
 
-  <!-- Type Selector -->
   <div class="mb-4">
     <label
       for="type"
       class="block text-sm font-medium mb-2 text-muted-foreground">Type</label
     >
 
-    <RadioGroup.Root value={type} class="flex gap-2 mb-4">
+    <RadioGroup.Root value={type} class="flex gap-2 mb-4 flex-wrap w-full">
       <div
         class={cn(
           `flex-1 border px-2 rounded-lg font-medium transition-colors flex gap-2 items-center justify-start`,
           type === "income"
             ? "border-input [&>div]:bg-primary"
-            : "bg-input/20 border-transparent"
+            : "bg-input/20 border-transparent",
         )}
       >
         <RadioGroup.Item
@@ -90,7 +88,7 @@
           `flex-1 border px-2 rounded-lg font-medium transition-colors flex gap-2 items-center justify-start`,
           type === "expense"
             ? "border-input [&>div]:bg-primary"
-            : "bg-input/20 border-transparent"
+            : "bg-input/20 border-transparent",
         )}
       >
         <RadioGroup.Item
