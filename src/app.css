@@ -24,11 +24,11 @@
   --border: oklch(0.9219 0 0);
   --input: oklch(0.9219 0 0);
   --ring: oklch(0.709 0 0);
-  --chart-1: oklch(0.5555 0 0);
-  --chart-2: oklch(0.5555 0 0);
-  --chart-3: oklch(0.5555 0 0);
-  --chart-4: oklch(0.5555 0 0);
-  --chart-5: oklch(0.5555 0 0);
+  --chart-1: oklch(75% 0.18 250);
+  --chart-2: oklch(65% 0.18 250);
+  --chart-3: oklch(55% 0.18 250);
+  --chart-4: oklch(45% 0.18 250);
+  --chart-5: oklch(35% 0.14 250);
   --sidebar: oklch(0.9851 0 0);
   --sidebar-foreground: oklch(0.1448 0 0);
   --sidebar-primary: oklch(0.2046 0 0);
@@ -83,11 +83,11 @@
   --border: oklch(0.3407 0 0);
   --input: oklch(0.4386 0 0);
   --ring: oklch(0.5555 0 0);
-  --chart-1: oklch(0.5555 0 0);
-  --chart-2: oklch(0.5555 0 0);
-  --chart-3: oklch(0.5555 0 0);
-  --chart-4: oklch(0.5555 0 0);
-  --chart-5: oklch(0.5555 0 0);
+  --chart-1: oklch(80% 0.15 250);
+  --chart-2: oklch(70% 0.15 250);
+  --chart-3: oklch(60% 0.15 250);
+  --chart-4: oklch(50% 0.15 250);
+  --chart-5: oklch(40% 0.12 250);
   --sidebar: oklch(0.2046 0 0);
   --sidebar-foreground: oklch(0.9851 0 0);
   --sidebar-primary: oklch(0.9851 0 0);
@@ -186,5 +186,17 @@
   option {
     background-color: var(--muted);
     color: var(--foreground);
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 }
