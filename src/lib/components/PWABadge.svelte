@@ -49,13 +49,13 @@
   let message = $derived(
     $needRefresh
       ? "New content available, click on reload button to update."
-      : ""
+      : "",
   );
 </script>
 
 {#if toast}
   <div
-    class="fixed right-0 bottom-0 m-4 p-3 border rounded-[5px] z-20 text-left shadow bg-background text-foreground"
+    class="bg-background text-foreground fixed right-0 bottom-0 z-20 m-4 rounded-[5px] border p-3 text-left shadow"
     role="alert"
     aria-labelledby="toast-message"
   >

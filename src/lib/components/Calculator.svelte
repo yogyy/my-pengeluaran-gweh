@@ -1,7 +1,7 @@
 <script lang="ts">
-  let display = '0';
-  let previousValue = '';
-  let operation = '';
+  let display = "0";
+  let previousValue = "";
+  let operation = "";
   let shouldResetDisplay = false;
 
   function inputNumber(num: string) {
@@ -9,23 +9,23 @@
       display = num;
       shouldResetDisplay = false;
     } else {
-      display = display === '0' ? num : display + num;
+      display = display === "0" ? num : display + num;
     }
   }
 
   function inputDecimal() {
     if (shouldResetDisplay) {
-      display = '0.';
+      display = "0.";
       shouldResetDisplay = false;
-    } else if (!display.includes('.')) {
-      display += '.';
+    } else if (!display.includes(".")) {
+      display += ".";
     }
   }
 
   function clear() {
-    display = '0';
-    previousValue = '';
-    operation = '';
+    display = "0";
+    previousValue = "";
+    operation = "";
     shouldResetDisplay = false;
   }
 
@@ -47,16 +47,16 @@
     let result = 0;
 
     switch (operation) {
-      case '+':
+      case "+":
         result = prev + current;
         break;
-      case '-':
+      case "-":
         result = prev - current;
         break;
-      case '×':
+      case "×":
         result = prev * current;
         break;
-      case '÷':
+      case "÷":
         result = prev / current;
         break;
       default:
@@ -64,8 +64,8 @@
     }
 
     display = result.toString();
-    previousValue = '';
-    operation = '';
+    previousValue = "";
+    operation = "";
     shouldResetDisplay = true;
   }
 
@@ -91,25 +91,35 @@
   </div>
   <div class="buttons">
     <button class="btn btn-clear" on:click={clear}>C</button>
-    <button class="btn btn-operator" on:click={() => performOperation('÷')}>÷</button>
-    <button class="btn btn-operator" on:click={() => performOperation('×')}>×</button>
-    <button class="btn btn-operator" on:click={() => performOperation('-')}>−</button>
-    
-    <button class="btn btn-number" on:click={() => inputNumber('7')}>7</button>
-    <button class="btn btn-number" on:click={() => inputNumber('8')}>8</button>
-    <button class="btn btn-number" on:click={() => inputNumber('9')}>9</button>
-    <button class="btn btn-operator" on:click={() => performOperation('+')}>+</button>
-    
-    <button class="btn btn-number" on:click={() => inputNumber('4')}>4</button>
-    <button class="btn btn-number" on:click={() => inputNumber('5')}>5</button>
-    <button class="btn btn-number" on:click={() => inputNumber('6')}>6</button>
+    <button class="btn btn-operator" on:click={() => performOperation("÷")}
+      >÷</button
+    >
+    <button class="btn btn-operator" on:click={() => performOperation("×")}
+      >×</button
+    >
+    <button class="btn btn-operator" on:click={() => performOperation("-")}
+      >−</button
+    >
+
+    <button class="btn btn-number" on:click={() => inputNumber("7")}>7</button>
+    <button class="btn btn-number" on:click={() => inputNumber("8")}>8</button>
+    <button class="btn btn-number" on:click={() => inputNumber("9")}>9</button>
+    <button class="btn btn-operator" on:click={() => performOperation("+")}
+      >+</button
+    >
+
+    <button class="btn btn-number" on:click={() => inputNumber("4")}>4</button>
+    <button class="btn btn-number" on:click={() => inputNumber("5")}>5</button>
+    <button class="btn btn-number" on:click={() => inputNumber("6")}>6</button>
     <button class="btn btn-equals" on:click={handleEquals}>=</button>
-    
-    <button class="btn btn-number" on:click={() => inputNumber('1')}>1</button>
-    <button class="btn btn-number" on:click={() => inputNumber('2')}>2</button>
-    <button class="btn btn-number" on:click={() => inputNumber('3')}>3</button>
-    
-    <button class="btn btn-number btn-zero" on:click={() => inputNumber('0')}>0</button>
+
+    <button class="btn btn-number" on:click={() => inputNumber("1")}>1</button>
+    <button class="btn btn-number" on:click={() => inputNumber("2")}>2</button>
+    <button class="btn btn-number" on:click={() => inputNumber("3")}>3</button>
+
+    <button class="btn btn-number btn-zero" on:click={() => inputNumber("0")}
+      >0</button
+    >
     <button class="btn btn-number" on:click={inputDecimal}>.</button>
   </div>
 </div>
@@ -137,7 +147,7 @@
     display: flex;
     justify-content: flex-end;
     word-break: break-all;
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", monospace;
     backdrop-filter: blur(10px);
   }
 
@@ -157,7 +167,10 @@
     transition: all 0.2s ease;
     color: white;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   .btn:active {
