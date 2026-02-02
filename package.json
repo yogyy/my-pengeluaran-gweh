@@ -1,12 +1,14 @@
 {
-  "name": "myPengeluaran",
-  "version": "0.0.0",
+  "name": "my-pengeluaran",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "format:file": "prettier --write",
+    "format:check": "prettier --check"
   },
   "devDependencies": {
     "@internationalized/date": "^3.10.1",
@@ -16,9 +18,12 @@
     "@types/node": "^24.6.2",
     "@vite-pwa/assets-generator": "^1.0.2",
     "bits-ui": "^2.15.4",
-    "prettier": "3.8.0",
+    "layerchart": "^2.0.0-next.44",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "svelte": "^5.39.9",
     "svelte-check": "^4.3.2",
+    "svelte-sonner": "^1.0.7",
     "typescript": "~5.9.3",
     "vite": "^7.1.9",
     "vite-plugin-pwa": "^1.1.0",
@@ -31,9 +36,11 @@
     "sharp-ico": "^0.1.5"
   },
   "dependencies": {
+    "@number-flow/svelte": "^0.3.10",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
     "dexie": "^4.2.1",
+    "prettier-plugin-svelte": "^3.4.1",
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.1.18",
