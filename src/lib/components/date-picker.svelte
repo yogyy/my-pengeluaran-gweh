@@ -21,8 +21,8 @@
   let todayDate = today(getLocalTimeZone());
 </script>
 
-<div class="flex flex-col gap-3 mb-4">
-  <Label for="{id}-date" class="px-1 w-full">Date</Label>
+<div class="mb-4 flex flex-col gap-3">
+  <Label for="{id}-date" class="w-full px-1">Date</Label>
 
   <Popover.Root bind:open>
     <Popover.Trigger id="{id}-date">
@@ -30,7 +30,7 @@
         <Button
           {...props}
           variant="outline"
-          class="justify-between font-normal w-full"
+          class="w-full justify-between font-normal"
         >
           {value
             ? value.toDate(getLocalTimeZone()).toLocaleDateString()
@@ -39,7 +39,11 @@
         </Button>
       {/snippet}
     </Popover.Trigger>
-    <Popover.Content class="w-auto overflow-hidden p-0" align="center">
+    <Popover.Content
+      class="w-auto overflow-hidden p-0"
+      align="center"
+      side="top"
+    >
       <Calendar
         type="single"
         years={[2020, 2021, 2023, 2024, 2025, 2026]}
