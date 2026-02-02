@@ -3,25 +3,33 @@
   import { liveQuery } from "dexie";
   import Button from "./ui/button/button.svelte";
   import { TrendingDown, TrendingUp } from "@lucide/svelte";
-  import { formatCurrency, formatDate } from "$lib/utils";
+  import { formatCurrency, formatDate, getRangeByPeriod } from "$lib/utils";
 
   type TxInfo = "all" | "income" | "expense";
-  let transactions = liveQuery(() => db.tx.toArray());
+  const { start, end } = getRangeByPeriod("30d");
+  let transactions = liveQuery(() =>
+    db.tx
+      .where("createdAt")
+      .between(start, end, true, false)
+      .reverse()
+      .limit(7)
+      .toArray(),
+  );
   let filterType = $state<TxInfo>("all");
 
   const filteredTransactions = $derived(
     filterType == "all"
       ? $transactions
-      : $transactions.filter((t) => t.type === filterType)
+      : $transactions.filter((t) => t.type === filterType),
   );
 </script>
 
-<div class="bg-card text-card-foreground rounded-lg shadow-md p-6">
-  <h2 class="text-xl font-bold mb-4">Transactions</h2>
-  <div class="flex gap-2 mb-6">
+<div class="bg-card text-card-foreground rounded-lg p-6 shadow-md">
+  <h2 class="mb-4 text-xl font-bold">Transactions</h2>
+  <div class="mb-6 flex gap-2">
     <Button
       onclick={() => (filterType = "all")}
-      class={`px-4 py-2 rounded-lg font-medium transition-colors ${
+      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
         filterType === "all" ? "bg-primary " : "bg-secondary"
       }`}
     >
@@ -29,7 +37,7 @@
     </Button>
     <Button
       onclick={() => (filterType = "income")}
-      class={`px-4 py-2 rounded-lg font-medium transition-colors ${
+      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
         filterType === "income" ? "bg-primary " : "bg-secondary"
       }`}
     >
@@ -37,7 +45,7 @@
     </Button>
     <Button
       onclick={() => (filterType = "expense")}
-      class={`px-4 py-2 rounded-lg font-medium transition-colors ${
+      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
         filterType === "expense" ? "bg-primary " : "bg-secondary"
       }`}
     >
@@ -46,18 +54,18 @@
   </div>
   <div class="space-y-2">
     {#if !filteredTransactions}
-      <p class="text-center text-muted-foreground py-8">
+      <p class="text-muted-foreground py-8 text-center">
         No transactions yet. Add one to get started!
       </p>
     {:else}
       {#each filteredTransactions as transaction (transaction.id)}
         <div
-          class="flex items-center justify-between p-4 bg-muted text-muted-foreground rounded-lg"
+          class="bg-muted text-muted-foreground flex items-center justify-between rounded-lg p-4"
         >
           <div class="flex-1">
             <div class="flex items-center gap-3">
               <div
-                class="w-10 h-10 rounded-lg flex items-center justify-center text-lg bg-primary"
+                class="bg-primary flex h-10 w-10 items-center justify-center rounded-lg text-lg"
               >
                 {#if transaction.type === "income"}
                   <TrendingUp class="text-green-400" />
@@ -84,7 +92,7 @@
               }`}
             >
               {transaction.type === "income" ? "+" : "-"}{formatCurrency(
-                transaction.amount
+                transaction.amount,
               )}
             </span>
             <Button

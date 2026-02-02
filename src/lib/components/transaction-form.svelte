@@ -12,6 +12,8 @@
     today,
     type CalendarDate,
   } from "@internationalized/date";
+  import { toast } from "svelte-sonner";
+  import * as Dialog from "$lib/components/ui/dialog/index.js";
 
   let type: "expense" | "income" = $state("expense");
   let amount = $state("");
@@ -36,10 +38,15 @@
     "Other",
   ];
 
+  let open = $state(false);
+
   async function handleSubmit(event: Event) {
     event.preventDefault();
     if (!amount || !category || !date) {
-      alert("Please fill in all fields");
+      toast.warning("Please fill in all fields", {
+        position: "top-center",
+        richColors: true,
+      });
       return;
     }
 
@@ -55,109 +62,135 @@
     amount = "";
     category = "";
     description = "";
+
+    wait(1000).then(() => (open = false));
+    toast.success("Transaction added successfully!", {
+      position: "top-center",
+      richColors: true,
+    });
+  }
+
+  function wait(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 </script>
 
-<div class="bg-card rounded-lg shadow-md p-6 text-card-foreground w-full">
-  <h2 class="text-xl font-bold mb-4">Add Transaction</h2>
-
-  <div class="mb-4">
-    <label
-      for="type"
-      class="block text-sm font-medium mb-2 text-muted-foreground">Type</label
-    >
-
-    <RadioGroup.Root value={type} class="flex gap-2 mb-4 flex-wrap w-full">
-      <div
-        class={cn(
-          `flex-1 border px-2 rounded-lg font-medium transition-colors flex gap-2 items-center justify-start`,
-          type === "income"
-            ? "border-input [&>div]:bg-primary"
-            : "bg-input/20 border-transparent",
-        )}
-      >
-        <RadioGroup.Item
-          onclick={() => (type = "income")}
-          value="income"
-          id="income"
-        />
-        <Label for="income" class="w-full py-2.5">Income</Label>
-      </div>
-      <div
-        class={cn(
-          `flex-1 border px-2 rounded-lg font-medium transition-colors flex gap-2 items-center justify-start`,
-          type === "expense"
-            ? "border-input [&>div]:bg-primary"
-            : "bg-input/20 border-transparent",
-        )}
-      >
-        <RadioGroup.Item
-          onclick={() => (type = "expense")}
-          value="expense"
-          id="expense"
-        />
-        <Label for="expense" class="py-2.5 w-full">Expense</Label>
-      </div>
-    </RadioGroup.Root>
-  </div>
-
-  <!-- Amount Input -->
-  <div class="mb-4">
-    <label for="amount" class="block text-sm font-medium mb-1">Amount</label>
-    <Input
-      id="amount"
-      type="number"
-      bind:value={amount}
-      placeholder="Rp 0"
-      step="0.01"
-      onkeydown={(e) => {
-        if (e.key === "Enter") {
-          handleSubmit(e);
-        }
-      }}
-      class="w-full px-3 py-2"
-    />
-  </div>
-
-  <!-- Category Select -->
-  <div class="mb-4">
-    <label for="category" class="block text-sm font-medium mb-1">Category</label
-    >
-    <NativeSelect.Root id="category" bind:value={category}>
-      <NativeSelect.Option value="">Select {type} category</NativeSelect.Option>
-      {#each type === "income" ? incomeCategories : expenseCategories as cat}
-        <NativeSelect.Option value={cat}>{cat}</NativeSelect.Option>
-      {/each}
-    </NativeSelect.Root>
-  </div>
-
-  <!-- Description Input -->
-  <div class="mb-4">
-    <label for="description" class="block text-sm font-medium mb-1"
-      >Description</label
-    >
-    <Input
-      id="description"
-      type="text"
-      bind:value={description}
-      placeholder="Enter description"
-      onkeydown={(e) => {
-        if (e.key === "Enter") {
-          handleSubmit(e);
-        }
-      }}
-      class="w-full px-3 py-2"
-    />
-  </div>
-
-  <!-- Date Input -->
-  <DatePicker bind:value={date} />
-
-  <!-- Submit Button -->
-  <Button
-    onclick={(event) => handleSubmit(event)}
-    class="w-full py-2 px-4 bg-background hover:bg-accent text-card-foreground"
+<Dialog.Root bind:open>
+  <Dialog.Trigger
+    class="bg-background border-accent cursor-pointer rounded-lg border p-6 shadow-md"
   >
-    Add Transaction
-  </Button>
-</div>
+    Add Transactions
+  </Dialog.Trigger>
+  <Dialog.Content class="p-0 ">
+    <div class="bg-card text-card-foreground w-full rounded-lg p-6 shadow-md">
+      <h2 class="mb-4 text-xl font-bold">Add Transaction</h2>
+
+      <div class="mb-4">
+        <label
+          for="type"
+          class="text-muted-foreground mb-2 block text-sm font-medium"
+          >Type</label
+        >
+
+        <RadioGroup.Root value={type} class="mb-4 flex w-full flex-wrap gap-2">
+          <div
+            class={cn(
+              `flex flex-1 items-center justify-start gap-2 rounded-lg border px-2 font-medium transition-colors`,
+              type === "income"
+                ? "border-input [&>div]:bg-primary"
+                : "bg-input/20 border-transparent",
+            )}
+          >
+            <RadioGroup.Item
+              onclick={() => (type = "income")}
+              value="income"
+              id="income"
+            />
+            <Label for="income" class="w-full py-2.5">Income</Label>
+          </div>
+          <div
+            class={cn(
+              `flex flex-1 items-center justify-start gap-2 rounded-lg border px-2 font-medium transition-colors`,
+              type === "expense"
+                ? "border-input [&>div]:bg-primary"
+                : "bg-input/20 border-transparent",
+            )}
+          >
+            <RadioGroup.Item
+              onclick={() => (type = "expense")}
+              value="expense"
+              id="expense"
+            />
+            <Label for="expense" class="w-full py-2.5">Expense</Label>
+          </div>
+        </RadioGroup.Root>
+      </div>
+
+      <!-- Amount Input -->
+      <div class="mb-4">
+        <label for="amount" class="mb-1 block text-sm font-medium">Amount</label
+        >
+        <Input
+          id="amount"
+          type="number"
+          bind:value={amount}
+          placeholder="Rp 0"
+          step="0.01"
+          onkeydown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(e);
+            }
+          }}
+          class="w-full px-3 py-2"
+        />
+      </div>
+
+      <!-- Category Select -->
+      <div class="mb-4">
+        <label for="category" class="mb-1 block text-sm font-medium"
+          >Category</label
+        >
+        <NativeSelect.Root id="category" bind:value={category}>
+          <NativeSelect.Option value=""
+            >Select {type} category</NativeSelect.Option
+          >
+          {#each type === "income" ? incomeCategories : expenseCategories as cat}
+            <NativeSelect.Option value={cat}>{cat}</NativeSelect.Option>
+          {/each}
+        </NativeSelect.Root>
+      </div>
+
+      <!-- Description Input -->
+      <div class="mb-4">
+        <label for="description" class="mb-1 block text-sm font-medium"
+          >Description</label
+        >
+        <Input
+          id="description"
+          type="text"
+          bind:value={description}
+          placeholder="Enter description"
+          onkeydown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(e);
+            }
+          }}
+          class="w-full px-3 py-2"
+        />
+      </div>
+
+      <!-- Date Input -->
+      <DatePicker bind:value={date} />
+
+      <!-- Submit Button -->
+      <Button
+        onclick={(event) => {
+          handleSubmit(event);
+        }}
+        class="bg-background hover:bg-accent text-card-foreground w-full px-4 py-2"
+      >
+        Add Transaction
+      </Button>
+    </div>
+  </Dialog.Content>
+</Dialog.Root>

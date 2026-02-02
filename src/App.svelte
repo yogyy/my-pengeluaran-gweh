@@ -3,13 +3,15 @@
   import TransactionForm from "$lib/components/transaction-form.svelte";
   import TransactionList from "$lib/components/transaction-list.svelte";
   import PWABadge from "$lib/components/PWABadge.svelte";
+  import { Toaster } from "$lib/components/ui/sonner";
+  import ChartPieDonutText from "$lib/components/chart-pie-donut-text.svelte";
 </script>
 
-<main class="min-h-screen bg-background p-4 md:p-8 text-foreground">
-  <div class="max-w-4xl mx-auto">
+<main class="bg-background text-foreground min-h-screen p-4 md:p-8">
+  <div class="mx-auto max-w-4xl">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-4xl font-bold mb-2">Expense Tracker</h1>
+      <h1 class="mb-2 text-4xl font-bold">Expense Tracker</h1>
       <p class="text-muted-foreground">
         Manage your income and expenses efficiently
       </p>
@@ -17,14 +19,9 @@
 
     <!-- Summary Cards -->
     <SummaryCards />
-
+    <ChartPieDonutText />
     <!-- Main Content -->
-    <div class="grid md:grid-cols-3 gap-8 mt-8">
-      <!-- Form -->
-      <div class="md:col-span-1">
-        <TransactionForm />
-      </div>
-
+    <div class="mt-8 gap-8">
       <!-- Transactions List -->
       <div class="md:col-span-2">
         <TransactionList />
@@ -34,3 +31,4 @@
 </main>
 
 <PWABadge />
+<Toaster />
