@@ -1,45 +1,34 @@
 import Dexie, { type Table } from "dexie";
 
-type Category =
+export type Category =
   | "food"
   | "transport"
-  | "shopping"
-  | "bills"
+  | "utilities"
   | "entertainment"
-  | "health"
-  | "other";
-export interface Expense {
-  id: string; // UUID
-  amount: number;
-  description?: string;
-  category: Category;
-  date: string; // ISO date string "YYYY-MM-DD"
-  createdAt: number; // unix ms timestamp
-  updatedAt?: number; // unix ms timestamp (optional)
-}
+  | "salary"
+  | "freelance"
+  | "investment"
+  | "gift"
+  | "other"
+  | string;
 
 export interface Tx {
-  id: string
-  type: 'income' | 'expense'
-  amount: number
-  category: string
-  description?: string
-  date: string
+  id: string;
+  type: "income" | "expense";
+  amount: number;
+  category: Category;
+  description?: string;
   createdAt: number; // unix ms timestamp
   updatedAt?: number; // unix ms timestamp (optional)
 }
 
 export class AppDB extends Dexie {
-  expenses!: Table<Expense, string>;
-  tx!: Table<Tx, string>
+  tx!: Table<Tx, string>;
 
   constructor() {
     super("app-db");
-
-    this.version(1).stores({
-      expenses:
-        "id, category, amount, description, date, createdAt, updatedAt, deletedAt",
-      tx: "id, type,  amount, category, description, date, createdAt, updatedAt, deletedAt",
+    this.version(2).stores({
+      tx: "id, createdAt, [type+createdAt], category",
     });
   }
 }
