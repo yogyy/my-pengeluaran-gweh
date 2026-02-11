@@ -9,11 +9,11 @@ export function formatCurrency(amount: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
-    minimumFractionDigits: 0
+    minimumFractionDigits: 0,
   }).format(amount ?? 0);
 }
 
-export function formatDate(dateStr: string) {
+export function formatDate(dateStr: string | number) {
   return new Date(dateStr).toLocaleDateString("id-ID", {
     year: "numeric",
     month: "short",
@@ -29,56 +29,59 @@ export const PERIOD = {
   ALL: "all",
 } as const;
 
-export type Period = typeof PERIOD[keyof typeof PERIOD];
-
+export type Period = (typeof PERIOD)[keyof typeof PERIOD];
+const DAY = 24 * 60 * 60 * 1000;
 export function getRangeByPeriod(period: Period) {
-  const now = new Date();
+  const now = Date.now();
+  const today = new Date();
 
   switch (period) {
     case PERIOD.DAYS_7: {
-      const end = now.getTime();
-      const start = end - 7 * 24 * 60 * 60 * 1000;
-      return { start, end };
+      return { start: now - 30 * DAY, end: now };
     }
 
-    case PERIOD.DAYS_30: {
-      const end = now.getTime();
-      const start = end - 30 * 24 * 60 * 60 * 1000;
-      return { start, end };
-    }
+    case PERIOD.DAYS_30:
+      return {
+        start: now - 30 * DAY,
+        end: now,
+      };
 
-    case PERIOD.MONTHS_6: {
-      const end = now.getTime();
-      const start = new Date(
-        now.getFullYear(),
-        now.getMonth() - 6,
-        now.getDate()
-      ).getTime();
-      return { start, end };
-    }
+    case PERIOD.MONTHS_6:
+      return {
+        start: new Date(
+          today.getFullYear(),
+          today.getMonth() - 6,
+          today.getDate(),
+        ).getTime(),
+        end: now,
+      };
 
-    case PERIOD.MONTHS_12: {
-      const end = now.getTime();
-      const start = new Date(
-        now.getFullYear(),
-        now.getMonth() - 12,
-        now.getDate()
-      ).getTime();
-      return { start, end };
-    }
+    case PERIOD.MONTHS_12:
+      return {
+        start: new Date(
+          today.getFullYear(),
+          today.getMonth() - 12,
+          today.getDate(),
+        ).getTime(),
+        end: now,
+      };
 
     case PERIOD.ALL:
     default:
-      return { start: 0, end: now.getTime() };
+      return {
+        start: 0,
+        end: now,
+      };
   }
 }
-
-
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WithoutChild<T> = T extends { child?: any } ? Omit<T, "child"> : T;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, "children"> : T;
+export type WithoutChildren<T> = T extends { children?: any }
+  ? Omit<T, "children">
+  : T;
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
-export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
+export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
+  ref?: U | null;
+};
