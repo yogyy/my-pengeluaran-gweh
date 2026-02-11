@@ -1,24 +1,28 @@
 <script lang="ts">
   import { db } from "$lib/db";
   import { cn, formatCurrency, getRangeByPeriod } from "$lib/utils";
-  import { liveQuery } from "dexie";
+  import Dexie, { liveQuery } from "dexie";
   import TransactionForm from "./transaction-form.svelte";
 
   const { start, end } = getRangeByPeriod("30d");
 
   const totals = liveQuery(async () => {
-    const rows = await db.tx
-      .where("createdAt")
-      .between(start, end, true, true)
-      .toArray();
+    let income = 0;
+    let expense = 0;
 
-    const income = rows
-      .filter((tx) => tx.type === "income")
-      .reduce((acc, r) => acc + r.amount, 0);
+    await db.tx
+      .where("[type+createdAt]")
+      .between(["income", start], ["income", Dexie.maxKey], true, true)
+      .each((r) => {
+        income += r.amount;
+      });
 
-    const expense = rows
-      .filter((tx) => tx.type === "expense")
-      .reduce((acc, r) => acc + r.amount, 0);
+    await db.tx
+      .where("[type+createdAt]")
+      .between(["expense", start], ["expense", Dexie.maxKey], true, true)
+      .each((r) => {
+        expense += r.amount;
+      });
 
     return { income, expense, balance: income - expense };
   });

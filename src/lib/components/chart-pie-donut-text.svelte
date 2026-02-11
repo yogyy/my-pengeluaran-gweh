@@ -2,7 +2,7 @@
   import * as Chart from "$lib/components/ui/chart/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Arc, PieChart, Text } from "layerchart";
-  import { liveQuery } from "dexie";
+  import Dexie, { liveQuery } from "dexie";
   import { db } from "$lib/db";
   import { formatCurrency, getRangeByPeriod } from "$lib/utils";
   import NumberFlow from "@number-flow/svelte";
@@ -24,12 +24,12 @@
     other: { label: "Other", color: "var(--chart-5)" },
   } satisfies Chart.ChartConfig;
 
+  const { start, end } = getRangeByPeriod("30d");
+
   let transactions = liveQuery(() =>
     db.tx
-      .where("createdAt")
-      .between(start, end, true, false)
-      .filter((tx) => tx.type === "expense")
-      .reverse()
+      .where("[type+createdAt]")
+      .between(["expense", start], ["expense", Dexie.maxKey], true, true)
       .toArray(),
   );
 
@@ -53,8 +53,6 @@
     }));
   });
 
-  const { start, end } = getRangeByPeriod("30d");
-
   let selectedPie = $state<number | null>(null);
 
   let showTooltip = $state(false);
@@ -77,7 +75,8 @@
   <Card.Header class="items-center">
     <Card.Title>Expense structure</Card.Title>
     <Card.Description>
-      This Month <NumberFlow
+      This Month
+      <NumberFlow
         value={totalExpense}
         format={{
           style: "currency",
