@@ -6,7 +6,7 @@
   import { cn } from "$lib/utils";
   import { Label } from "$lib/components/ui/label/index.js";
   import DatePicker from "./date-picker.svelte";
-  import { db } from "$lib/db";
+  import { db, type Category } from "$lib/db";
   import {
     getLocalTimeZone,
     today,
@@ -16,26 +16,26 @@
   import * as Dialog from "$lib/components/ui/dialog/index.js";
 
   let type: "expense" | "income" = $state("expense");
-  let amount = $state("");
-  let category = $state("");
-  let description = $state("");
+  let amount = $state("1111");
+  let category = $state<Category>("");
+  let description = $state("test");
   let todayDate = today(getLocalTimeZone());
 
   let date = $state<CalendarDate | undefined>(todayDate);
 
   const incomeCategories = [
-    "Salary",
-    "Freelance",
-    "Investment",
-    "Gift",
-    "Other",
+    "salary",
+    "freelance",
+    "investment",
+    "gift",
+    "other",
   ];
   const expenseCategories = [
-    "Food",
-    "Transport",
-    "Utilities",
-    "Entertainment",
-    "Other",
+    "food",
+    "transport",
+    "utilities",
+    "entertainment",
+    "other",
   ];
 
   let open = $state(false);
@@ -50,20 +50,29 @@
       return;
     }
 
+    const now = new Date();
+
     await db.tx.add({
       id: crypto.randomUUID(),
       type,
       amount: parseFloat(amount),
       description,
       category,
-      date: date.toDate(getLocalTimeZone()).toString(),
-      createdAt: Date.now(),
+      createdAt: date
+        ?.toDate(getLocalTimeZone())
+        .setHours(
+          now.getHours(),
+          now.getMinutes(),
+          now.getSeconds(),
+          now.getMilliseconds(),
+        ),
     });
+    date = todayDate;
     amount = "";
     category = "";
     description = "";
 
-    wait(1000).then(() => (open = false));
+    open = false;
     toast.success("Transaction added successfully!", {
       position: "top-center",
       richColors: true,
@@ -77,13 +86,13 @@
 
 <Dialog.Root bind:open>
   <Dialog.Trigger
-    class="bg-background border-accent cursor-pointer rounded-lg border p-6 shadow-md"
+    class="bg-background border-accent hover:bg-accent cursor-pointer rounded-lg border p-6 shadow-md"
   >
     Add Transactions
   </Dialog.Trigger>
   <Dialog.Content class="p-0 ">
     <div class="bg-card text-card-foreground w-full rounded-lg p-6 shadow-md">
-      <h2 class="mb-4 text-xl font-bold">Add Transaction</h2>
+      <h2 class="mb-4 text-xl font-bold">Add New Records</h2>
 
       <div class="mb-4">
         <label
@@ -162,9 +171,9 @@
 
       <!-- Description Input -->
       <div class="mb-4">
-        <label for="description" class="mb-1 block text-sm font-medium"
-          >Description</label
-        >
+        <label for="description" class="mb-1 block text-sm font-medium">
+          Description
+        </label>
         <Input
           id="description"
           type="text"
