@@ -5,6 +5,8 @@
   import PWABadge from "$lib/components/PWABadge.svelte";
   import { Toaster } from "$lib/components/ui/sonner";
   import ChartPieDonutText from "$lib/components/chart-pie-donut-text.svelte";
+  import { ModeWatcher } from "mode-watcher";
+  import DarkModeToggle from "$lib/components/dark-mode-toggle.svelte";
 </script>
 
 <main class="bg-background text-foreground min-h-screen p-4 md:p-8">
@@ -16,7 +18,6 @@
         Manage your income and expenses efficiently
       </p>
     </div>
-
     <!-- Summary Cards -->
     <SummaryCards />
     <ChartPieDonutText />
@@ -29,6 +30,6 @@
     </div>
   </div>
 </main>
-
 <PWABadge />
 <Toaster />
+<ModeWatcher />
