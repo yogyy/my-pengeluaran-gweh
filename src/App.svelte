@@ -31,5 +31,5 @@
   </div>
 </main>
 <PWABadge />
-<Toaster />
+<Toaster position="top-left" />
 <ModeWatcher />
