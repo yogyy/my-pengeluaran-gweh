@@ -16,9 +16,9 @@
   import * as Dialog from "$lib/components/ui/dialog/index.js";
 
   let type: "expense" | "income" = $state("expense");
-  let amount = $state("1111");
+  let amount = $state("");
   let category = $state<Category>("");
-  let description = $state("test");
+  let description = $state("");
   let todayDate = today(getLocalTimeZone());
 
   let date = $state<CalendarDate | undefined>(todayDate);
@@ -74,7 +74,6 @@
 
     open = false;
     toast.success("Transaction added successfully!", {
-      position: "top-center",
       richColors: true,
     });
   }
