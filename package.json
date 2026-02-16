@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
     "format:file": "prettier --write",
-    "format:check": "prettier --check"
+    "format:check": "prettier --check",
+    "machine-translate": "inlang machine translate --project project.inlang"
   },
   "devDependencies": {
     "@internationalized/date": "^3.10.1",
@@ -28,7 +29,9 @@
     "vite": "^7.1.9",
     "vite-plugin-pwa": "^1.1.0",
     "vite-tsconfig-paths": "^6.0.4",
-    "workbox-window": "^7.4.0"
+    "workbox-window": "^7.4.0",
+    "@inlang/paraglide-js": "^2.12.0",
+    "@inlang/cli": "^3.0.0"
   },
   "private": true,
   "resolutions": {
