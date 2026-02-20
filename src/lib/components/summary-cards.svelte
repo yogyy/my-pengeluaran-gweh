@@ -41,7 +41,7 @@
             balance < 0 ? "text-destructive italic" : "",
           )}
         >
-          {formatCurrency(balance)}
+          {formatCurrency(balance, $currency)}
         </p>
       </div>
     </div>

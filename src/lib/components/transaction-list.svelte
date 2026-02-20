@@ -133,6 +133,7 @@
               >
                 {transaction.type === "income" ? "+" : "-"}{formatCurrency(
                   transaction.amount,
+                  $currency,
                 )}
               </span>
               <span>{formatDate(transaction.createdAt)}</span>

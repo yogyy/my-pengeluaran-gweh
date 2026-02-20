@@ -5,11 +5,26 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number) {
+export function formatCurrencyOld(amount: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
+  }).format(amount ?? 0);
+}
+
+type CurrencyCode = "IDR" | "USD" | string;
+const localeMap: Record<CurrencyCode, string> = {
+  IDR: "id-ID",
+  USD: "en-US",
+};
+
+export function formatCurrency(amount: number, currencyCode: CurrencyCode) {
+  const locale = localeMap[currencyCode] ?? "en-US";
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currencyCode,
+    minimumFractionDigits: currencyCode === "IDR" ? 0 : undefined,
   }).format(amount ?? 0);
 }
 

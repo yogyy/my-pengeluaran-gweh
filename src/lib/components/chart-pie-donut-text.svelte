@@ -106,8 +106,8 @@
         {#snippet aboveMarks()}
           <Text
             value={selectedPie != null
-              ? formatCurrency(chartData[selectedPie].amount)
-              : String(formatCurrency(totalExpense))}
+              ? formatCurrency(chartData[selectedPie].amount, $currency)
+              : String(formatCurrency(totalExpense, $currency))}
             textAnchor="middle"
             verticalAnchor="middle"
             class="fill-foreground text-destructive! text-lg! font-bold"
