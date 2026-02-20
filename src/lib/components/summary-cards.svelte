@@ -3,6 +3,8 @@
   import { cn, formatCurrency, getRangeByPeriod } from "$lib/utils";
   import Dexie, { liveQuery } from "dexie";
   import TransactionForm from "./transaction-form.svelte";
+  import { m } from "../../paraglide/messages.js";
+  import { currency } from "$lib/store/currency.js";
 
   const { start, end } = getRangeByPeriod("30d");
 
@@ -34,7 +36,7 @@
   <div class="bg-card border-accent rounded-lg border p-6 shadow-md">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm font-medium">Cash</p>
+        <p class="text-sm font-medium">{m.cash()}</p>
         <p
           class={cn(
             "mt-2 text-xl font-bold md:text-3xl",
