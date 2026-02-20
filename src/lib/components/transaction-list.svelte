@@ -16,6 +16,8 @@
   import type { Component } from "svelte";
   import { toast } from "svelte-sonner";
   import TransactionItem from "./transaction-item.svelte";
+  import { m } from "../../paraglide/messages.js";
+  import { currency } from "$lib/store/currency.js";
 
   type TxInfo = "all" | "income" | "expense";
   const { start, end } = getRangeByPeriod("30d");
@@ -46,17 +48,17 @@
   };
 
   export const categoryConfig: Record<Category, CategoryConfig> = {
-    food: { icon: Soup, label: "Food & Drink", color: "#f97316" },
-    transport: { icon: Bus, label: "Transport", color: "#3b82f6" },
-    utilities: { icon: Zap, label: "Utilities", color: "#eab308" },
-    entertainment: { icon: Film, label: "Entertainment", color: "#8b5cf6" },
+    food: { icon: Soup, label: m.tsx_food(), color: "#f97316" },
+    transport: { icon: Bus, label: m.tsx_transport(), color: "#3b82f6" },
+    utilities: { icon: Zap, label: m.tsx_util(), color: "#eab308" },
+    entertainment: { icon: Film, label: m.tsx_entertain(), color: "#8b5cf6" },
 
-    salary: { icon: Briefcase, label: "Salary", color: "#22c55e" },
-    freelance: { icon: TrendingUp, label: "Freelance", color: "#14b8a6" },
-    investment: { icon: TrendingUp, label: "Investment", color: "#0ea5e9" },
-    gift: { icon: Gift, label: "Gift", color: "#ec4899" },
+    salary: { icon: Briefcase, label: m.tsx_salary(), color: "#22c55e" },
+    freelance: { icon: TrendingUp, label: m.tsx_freelance(), color: "#14b8a6" },
+    investment: { icon: TrendingUp, label: m.tsx_invest(), color: "#0ea5e9" },
+    gift: { icon: Gift, label: m.tsx_gift(), color: "#ec4899" },
 
-    other: { icon: Ellipsis, label: "Other", color: "#6b7280" },
+    other: { icon: Ellipsis, label: m.tsx_other(), color: "#6b7280" },
   };
 </script>
 
@@ -65,33 +67,42 @@
   <div class="mb-6 flex gap-2 px-2.5">
     <Button
       onclick={() => (filterType = "all")}
-      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
-        filterType === "all" ? "bg-primary " : "bg-secondary"
-      }`}
+      class={cn(
+        "rounded-lg px-4 py-2 font-medium",
+        filterType === "all"
+          ? "bg-primary "
+          : "bg-secondary text-secondary-foreground",
+      )}
     >
-      All
+      {m.tsx_all_btn()}
     </Button>
     <Button
       onclick={() => (filterType = "income")}
-      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
-        filterType === "income" ? "bg-primary " : "bg-secondary"
-      }`}
+      class={cn(
+        "rounded-lg px-4 py-2 font-medium",
+        filterType === "income"
+          ? "bg-primary "
+          : "bg-secondary text-secondary-foreground",
+      )}
     >
-      Income
+      {m.tsx_in_btn()}
     </Button>
     <Button
       onclick={() => (filterType = "expense")}
-      class={`rounded-lg px-4 py-2 font-medium transition-colors ${
-        filterType === "expense" ? "bg-primary " : "bg-secondary"
-      }`}
+      class={cn(
+        "rounded-lg px-4 py-2 font-medium",
+        filterType === "expense"
+          ? "bg-primary "
+          : "bg-secondary text-secondary-foreground",
+      )}
     >
-      Expense
+      {m.tsx_out_btn()}
     </Button>
   </div>
   <div class="flex flex-col">
     {#if !filteredTransactions}
       <p class="text-muted-foreground py-8 text-center">
-        No transactions yet. Add one to get started!
+        {m.tsx_no_item()}
       </p>
     {:else}
       {#each filteredTransactions as transaction (transaction.id)}
@@ -102,7 +113,7 @@
         } = categoryConfig[transaction.category]}
         <TransactionItem {transaction}>
           <div
-            class="bg-muted text-muted-foreground group flex items-center justify-between rounded-lg border-t p-1.5 px-4 first:border-none"
+            class="bg-muted text-muted-foreground group flex touch-none items-center justify-between rounded-lg border-t p-1.5 px-4 first:border-none"
           >
             <div class="flex-1">
               <div class="flex items-center gap-3">
@@ -133,6 +144,7 @@
               >
                 {transaction.type === "income" ? "+" : "-"}{formatCurrency(
                   transaction.amount,
+                  $currency,
                 )}
               </span>
               <span>{formatDate(transaction.createdAt)}</span>
@@ -144,7 +156,8 @@
     <Button
       variant="outline"
       class="m-2 self-end-safe"
-      onclick={() => toast.warning("feature not ready")}>Show More</Button
+      onclick={() => toast.warning(m.tsx_more_warn())}
+      >{m.tsx_more_btn()}</Button
     >
   </div>
 </div>

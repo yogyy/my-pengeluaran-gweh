@@ -13,7 +13,8 @@
   } from "./chart-utils.js";
   import { getTooltipContext, Tooltip as TooltipPrimitive } from "layerchart";
   import type { Snippet } from "svelte";
-  import { Item } from "../radio-group/index.js";
+  import { currency } from "$lib/store/currency.js";
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function defaultFormatter(value: any, _payload: TooltipPayload[]) {
     return `${value}`;
@@ -160,7 +161,7 @@
                   class="text-foreground font-mono font-medium tabular-nums"
                 >
                   {#if formatValue}
-                    {formatCurrency(item.value)}
+                    {formatCurrency(item.value, $currency)}
                   {:else}
                     {item.value.toLocaleString()}
                   {/if}

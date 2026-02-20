@@ -9,6 +9,7 @@
     today,
     type CalendarDate,
   } from "@internationalized/date";
+  import { m } from "../../paraglide/messages.js";
 
   const id = $props.id();
 
@@ -22,7 +23,7 @@
 </script>
 
 <div class="mb-4 flex flex-col gap-3">
-  <Label for="{id}-date" class="w-full px-1">Date</Label>
+  <Label for="{id}-date" class="w-full px-1">{m.date()}</Label>
 
   <Popover.Root bind:open>
     <Popover.Trigger id="{id}-date">

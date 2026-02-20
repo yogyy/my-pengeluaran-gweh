@@ -6,6 +6,8 @@
   import { db } from "$lib/db";
   import { formatCurrency, getRangeByPeriod } from "$lib/utils";
   import NumberFlow from "@number-flow/svelte";
+  import { m } from "../../paraglide/messages.js";
+  import { currency } from "$lib/store/currency.js";
 
   const CATEGORY_COLORS: Record<string, string> = {
     food: "var(--chart-1)",
@@ -73,9 +75,9 @@
 
 <Card.Root class="flex flex-col">
   <Card.Header class="items-center">
-    <Card.Title>Expense structure</Card.Title>
+    <Card.Title>{m.chart_title()}</Card.Title>
     <Card.Description>
-      This Month
+      {m.chart_desc()}
       <NumberFlow
         value={totalExpense}
         format={{
@@ -106,8 +108,8 @@
         {#snippet aboveMarks()}
           <Text
             value={selectedPie != null
-              ? formatCurrency(chartData[selectedPie].amount)
-              : String(formatCurrency(totalExpense))}
+              ? formatCurrency(chartData[selectedPie].amount, $currency)
+              : String(formatCurrency(totalExpense, $currency))}
             textAnchor="middle"
             verticalAnchor="middle"
             class="fill-foreground text-destructive! text-lg! font-bold"
@@ -116,7 +118,7 @@
           <Text
             value={selectedPie != null
               ? chartData[selectedPie].category
-              : "Pengeluaran"}
+              : m.chart_text()}
             textAnchor="middle"
             verticalAnchor="middle"
             class="fill-muted-foreground! text-muted-foreground capitalize"
